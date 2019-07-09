@@ -1,6 +1,23 @@
 FROM ubuntu:14.04
 
-MAINTAINER James Huang
+MAINTAINER Gabriel Petry
+
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive  apt-get install -y \
+        openjdk-7-jre \
+        icedtea-plugin \
+        wget \
+        sudo \
+        firefox && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /var/cache/* && \
+    wget https://ftp.mozilla.org/pub/firefox/releases/51.0/linux-x86_64/en-US/firefox-51.0.tar.bz2 && \
+    tar xjf firefox-51.0.tar.bz2 && \
+    mv firefox /opt/firefox51 && \
+    mv /usr/bin/firefox /usr/bin/firefox_old && \
+    ln -sf /opt/firefox51/firefox /usr/bin/firefox && \
+    rm -rf firefox-51.0.tar.bz2
 
 RUN export uid=1000 gid=1000 && \
     mkdir -p /home/firefox && \
@@ -9,12 +26,6 @@ RUN export uid=1000 gid=1000 && \
     echo "firefox ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/firefox && \
     chmod 0440 /etc/sudoers.d/firefox && \
     chown ${uid}:${gid} -R /home/firefox
-
-RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive  apt-get install -y firefox \
-    language-pack-zh-hant firefox-locale-zh-hant fonts-wqy-zenhei \
-    openjdk-7-jre icedtea-plugin && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* /var/cache/*
 
 ENV HOME /home/firefox
 WORKDIR /home/firefox
