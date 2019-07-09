@@ -4,22 +4,17 @@ iDRAC, all because iDRAC. I couldn't smoothly remote connect to my DELL machine 
 
 # Usage
 
-Install docker/X Window on Mac
+Allow xorg in another hostname, you can specify whatever hostname you want, but the container must use it
 
-    brew install socat docker docker-machine
-    brew cask install xquartz
+    xhost +local:batman
+    
+Start the container
 
-start your docker vm
-
-    docker-machine create --driver virtualbox dev
-    eval "$(docker-machine env dev)"
-
-run firefox-java container
-
-    # VBOXNET_IP is your vboxnetX's IP on your mac
-    VBOXNET_IP=192.168.99.1
-    socat TCP-LISTEN:6000,bind=${VBOXNET_IP},reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
-    docker run -it --rm -e DISPLAY=${VBOXNET_IP}:0 cmaohuang/firefox-java
+    docker run -it --rm \
+    -e "DISPLAY=${DISPLAY}" \
+    -v "/tmp/.X11-unix:/tmp/.X11-unix" \
+    -v "$HOME/DockerDownloads:/home/firefox/Downloads" \
+    gabrielpetry/firefox-java
 
 It works!!!
 
