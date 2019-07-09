@@ -14,6 +14,7 @@ Start the container
     -e "DISPLAY=${DISPLAY}" \
     -v "/tmp/.X11-unix:/tmp/.X11-unix" \
     -v "$HOME/DockerDownloads:/home/firefox/Downloads" \
+    -h 'batman' \
     gabrielpetry/firefox-java
 
 It works!!!
